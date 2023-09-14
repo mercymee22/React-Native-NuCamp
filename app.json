@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "nucampsite",
-    "slug": "nucampsite",
+    "slug": "sean-react-native-1",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "89ddd028-8264-4ed1-87e7-145351602ac4"
+      }
+    },
+    "owner": "mercymee"
   }
 }

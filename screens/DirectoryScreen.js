@@ -1,5 +1,7 @@
-import { FlatList } from "react-native";
-import { Avatar, ListItem } from "react-native-elements";
+import { useState } from 'react';
+import { FlatList } from 'react-native';
+import { Avatar, ListItem } from 'react-native-elements';
+import { CAMPSITES } from '../shared/campsites';
 
 //The renderDirectoryItem function we passed to the FlatLists renderItem prop will get passed an object with specific fields when it's called by FlatList. One of the fields is "item", which contains the current item in the array we want to render. When function gets called with an object, we can grab certain fields from the object using destructuring (in the parameter list). We're destructuring item and renaming it to campsite since our items we're rendering are campsite data.
 // render a ListItem, similar to the html listitem element.  Using it to render each campsite from the FlatList. Other components inside ListItem configure how ListItem renders.
@@ -8,10 +10,16 @@ import { Avatar, ListItem } from "react-native-elements";
 // Title set equal to the campsite name
 // onPress is a built in prop for the ListItem component. Whenever the the screen is pressed, the function gets invoked and passes the id of the campsite, telling the main componeot what campsite Id was clicked on.
 
-const DirectoryScreen = (props) => {
+const DirectoryScreen = ({ navigation }) => {
+    const [campsites, setCampsites] = useState(CAMPSITES);
+
     const renderDirectoryItem = ({ item: campsite }) => {
         return (
-            <ListItem onPress={() => props.onPress(campsite.id)}>
+            <ListItem
+                onPress={() =>
+                    navigation.navigate('CampsiteInfo', { campsite })
+                }
+            >
                 <Avatar source={campsite.image} rounded />
                 <ListItem.Content>
                     <ListItem.Title>{campsite.name}</ListItem.Title>
@@ -24,7 +32,7 @@ const DirectoryScreen = (props) => {
     };
     return (
         <FlatList
-            data={props.campsites}
+            data={campsites}
             renderItem={renderDirectoryItem}
             keyExtractor={(item) => item.id.toString()}
         />

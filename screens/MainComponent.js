@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useState } from 'react';
+import { View } from 'react-native';
 import { CAMPSITES } from '../shared/campsites';
+import CampsiteInfoScreen from './CampsiteInfoScreen';
 import DirectoryScreen from './DirectoryScreen';
 
-// Const [campsites... state variable named campsites, function for setting this variable is setCampsites. Then passing the "CAMPSITES" array to the use state hook to initialize the "campsites" state variable equal to the array imported from the shared folder (CAMPSITES).
-
 const Main = () => {
-    const [campsites, setCampsites] = useState(CAMPSITES); 
+    const [campsites, setCampsites] = useState(CAMPSITES);
+    const [selectedCampsiteId, setSelectedCampsiteId] = useState();
 
-    return <DirectoryScreen campsites={campsites} /> 
-}
+    return (
+        <View style={{ flex: 1 }}>
+            <DirectoryScreen
+                campsites={campsites}
+                onPress={(campsiteId) => setSelectedCampsiteId(campsiteId)}
+            />
+            <CampsiteInfoScreen
+                campsite={
+                    campsites.filter(
+                        (campsite) => campsite.id === selectedCampsiteId
+                    )[0]
+                }
+            />
+        </View>
+    );
+};
 
 export default Main;
-
-// campsites={campsites} -- passing a prop names campsites that is equal to our state variable campsites-(1st campsites under Main is the state variable)

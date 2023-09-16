@@ -6,14 +6,15 @@ import { Avatar, ListItem } from "react-native-elements";
 // Avatar component for displaying campsite image data. rounded prop makes image appear as a circle.
 // The ListItem.Content component defines our main content display in the ListItem
 // Title set equal to the campsite name
+// onPress is a built in prop for the ListItem component. Whenever the the screen is pressed, the function gets invoked and passes the id of the campsite, telling the main componeot what campsite Id was clicked on.
 
 const DirectoryScreen = (props) => {
-    const renderDirectoryItem = ({ item: campsite }) => {  
+    const renderDirectoryItem = ({ item: campsite }) => {
         return (
-            <ListItem>                                     
-                <Avatar source={campsite.image} rounded />  
-                <ListItem.Content>                          
-                    <ListItem.Title>{campsite.name}</ListItem.Title>    
+            <ListItem onPress={() => props.onPress(campsite.id)}>
+                <Avatar source={campsite.image} rounded />
+                <ListItem.Content>
+                    <ListItem.Title>{campsite.name}</ListItem.Title>
                     <ListItem.Subtitle>
                         {campsite.description}
                     </ListItem.Subtitle>
@@ -21,7 +22,6 @@ const DirectoryScreen = (props) => {
             </ListItem>
         );
     };
-    
     return (
         <FlatList
             data={props.campsites}

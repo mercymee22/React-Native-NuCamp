@@ -5,6 +5,7 @@ import DirectoryScreen from './DirectoryScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from './HomeScreen';
+import AboutScreen from './AboutScreen';
 
 // HomeNavigator is where directory navigator is defined.
 // createDrawerNavigator - returns an object that contains the navigator and screen components for configuring a drawer navigator.
@@ -55,6 +56,31 @@ const DirectoryNavigator = () => {
     );
 };
 
+const AboutNavigator = () {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen
+              name='About'
+              component={AboutScreen}
+            /> 
+        </Stack.Navigator>
+    );
+};
+
+const ContactScreen = () {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen
+                name='Contact'
+                component={ContactScreen}
+                options={{ title='Contact Us' }}
+            />
+        </Stack.Navigator>
+    );
+};
+
 // Drawer.Navigator provides a way for your app to implement a drawer navigation that can be swiped in from the side of the screen. 
 // Drawer.Screen: Used for rendering a screen. Each `Drawer.Screen` component is a screen in the drawer navigation. This defines our screens that will show in the drawer, one for each screen.
 // Component=HomeNavigator: component prop = HomeNavigator which is our stack navigator we're nesting inside this drawer as it's own screen.
@@ -82,6 +108,15 @@ const Main = () => {
                     name='Directory'
                     component={DirectoryNavigator}
                     options={{ title: 'Directory' }}
+                />
+                <Drawer.Screen
+                    name='About'
+                    component={AboutNavigator}
+                />
+                <Drawer.Screen
+                    name='Contact'
+                    component={ContactNavigator}
+                    options={{title: 'Contact Us'}}
                 />
             </Drawer.Navigator>
         </View>

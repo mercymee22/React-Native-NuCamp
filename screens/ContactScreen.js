@@ -7,9 +7,9 @@ const ContactScreen = () => {
             <Card wrapperStyle={{margin: 20}}>
                 <Card.Title>Contact Information</Card.Title>
                 <Card.Divider />
-                <Text Style={{marginBottom: 10}}>1 Nucamp Way{'\n'}
-                        Seattle, WA 98001{'\n'}
-                        U.S.A.</Text>{'\n'}
+                <Text>1 Nucamp Way</Text>{'\n'}
+                <Text>Seattle, WA 98001</Text>{'\n'}
+                <Text Style={{marginBottom: 10}}>U.S.A.</Text>{'\n'}
                 <Text>Phone: 1-206-555-1234</Text>
                 <Text>Email: campsites@nucamp.co</Text>
             </Card>

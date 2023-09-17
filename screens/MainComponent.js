@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeScreen from './HomeScreen';
 import AboutScreen from './AboutScreen';
+import ContactScreen from './ContactScreen';
 
 // HomeNavigator is where directory navigator is defined.
 // createDrawerNavigator - returns an object that contains the navigator and screen components for configuring a drawer navigator.
@@ -56,7 +57,7 @@ const DirectoryNavigator = () => {
     );
 };
 
-const AboutNavigator = () {
+const AboutNavigator = () => {
     const Stack = createStackNavigator();
     return (
         <Stack.Navigator screenOptions={screenOptions}>
@@ -68,14 +69,14 @@ const AboutNavigator = () {
     );
 };
 
-const ContactScreen = () {
+const ContactNavigator = () => {
     const Stack = createStackNavigator();
     return (
         <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen
                 name='Contact'
                 component={ContactScreen}
-                options={{ title='Contact Us' }}
+                options={{ title: 'Contact Us' }}
             />
         </Stack.Navigator>
     );

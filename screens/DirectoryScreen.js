@@ -10,6 +10,7 @@ import { CAMPSITES } from '../shared/campsites';
 // Title set equal to the campsite name
 // onPress is a built in prop for the ListItem component. Whenever the the screen is pressed, the function gets invoked and passes the id of the campsite, telling the main componeot what campsite Id was clicked on.
 // navigation.navigate: In React Navigation, the `navigate` function is provided to screen components via the `navigation` prop. So we can access it by destructuring `navigation` from the props passed to our component. This function can be used to navigate among different screens.
+//useState hook: state variable of campsites, setting function of setCampsites. The inital value of campsites state variable is the CAMPSITES array..
 
 const DirectoryScreen = ({ navigation }) => {
     const [campsites, setCampsites] = useState(CAMPSITES);

@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { FlatList } from 'react-native';
-import { Avatar, ListItem } from 'react-native-elements';
-import { CAMPSITES } from '../shared/campsites';
+import { FlatList, Text, View } from 'react-native';
+import { Tile } from 'react-native-elements';
+import { useSelector } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
+import Loading from '.../components/LoadingComponent';
 
 // The renderDirectoryItem function we passed to the FlatLists renderItem prop will get passed an object with specific fields when it's called by FlatList. One of the fields is "item", which contains the current item in the array we want to render. When function gets called with an object, we can grab certain fields from the object using destructuring (in the parameter list). We're destructuring item and renaming it to campsite since our items we're rendering are campsite data.
 // render a ListItem, similar to the html listitem element.  Using it to render each campsite from the FlatList. Other components inside ListItem configure how ListItem renders.
@@ -10,31 +11,40 @@ import { CAMPSITES } from '../shared/campsites';
 // Title set equal to the campsite name
 // onPress is a built in prop for the ListItem component. Whenever the the screen is pressed, the function gets invoked and passes the id of the campsite, telling the main componeot what campsite Id was clicked on.
 // navigation.navigate: In React Navigation, the `navigate` function is provided to screen components via the `navigation` prop. So we can access it by destructuring `navigation` from the props passed to our component. This function can be used to navigate among different screens.
-//useState hook: state variable of campsites, setting function of setCampsites. The inital value of campsites state variable is the CAMPSITES array..
+// useState hook: state variable of campsites, setting function of setCampsites. The inital value of campsites state variable is the CAMPSITES array..
+// campsites.errMess - Checks to see if there is an error message, is truthy.  If it is it renders a text component with the error message.
 
 const DirectoryScreen = ({ navigation }) => {
-    const [campsites, setCampsites] = useState(CAMPSITES);
+    const campsites = useSelector((state) => state.campsites);
+
+    if (campsites.isLoading) {
+        return <Loading />;
+    }
+
+    if (campsites.errMess) {
+        return (
+            <View>
+                <Text>{campsites.errMess}</Text>
+            </View>
+        );
+    }
 
     const renderDirectoryItem = ({ item: campsite }) => {
         return (
-            <ListItem
+            <Tile
+                title={campsite.name}
+                caption={campsite.description}
+                featured
                 onPress={() =>
                     navigation.navigate('CampsiteInfo', { campsite })
                 }
-            >
-                <Avatar source={campsite.image} rounded />
-                <ListItem.Content>
-                    <ListItem.Title>{campsite.name}</ListItem.Title>
-                    <ListItem.Subtitle>
-                        {campsite.description}
-                    </ListItem.Subtitle>
-                </ListItem.Content>
-            </ListItem>
+                imageSrc={{ uri: baseUrl + campsite.image }}
+            />
         );
     };
     return (
         <FlatList
-            data={campsites}
+            data={campsites.campsitesArray}
             renderItem={renderDirectoryItem}
             keyExtractor={(item) => item.id.toString()}
         />

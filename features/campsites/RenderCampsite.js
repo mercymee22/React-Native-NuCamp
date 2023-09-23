@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
+import { baseUrl } from '../../shared/baseUrl';
 
 
 // Card - returns a card component
@@ -15,7 +16,7 @@ const RenderCampsite = (props) => {
     if (campsite) {
         return (
             <Card containerStyle={ styles.cardContainer }>
-                <Card.Image source={campsite.image}>
+                <Card.Image source={{ url: baseUrl + campsite.image}}>
                     <View style={{ justifyContent: 'center', flex: 1 }}>
                         <Text
                             style={{

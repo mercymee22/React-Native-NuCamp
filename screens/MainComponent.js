@@ -9,6 +9,12 @@ import AboutScreen from './AboutScreen';
 import ContactScreen from './ContactScreen';
 import { Icon } from 'react-native-elements';
 import logo from '../assets/images/logo.png';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchPartners } from '../features/partners/partnerSlice';
+import { fetchCampsites } from '../features/campsites/campsiteSlice';
+import { fetchPromotions } from '../features/promotions/promotionsSlice';
+import { fetchComments } from '../features/comments/commentsSlice';
 
 // HomeNavigator is where directory navigator is defined.
 // createDrawerNavigator - returns an object that contains the navigator and screen components for configuring a drawer navigator.
@@ -20,6 +26,7 @@ const screenOptions = {
     headerTintColor: '#fff',
     headerStyle: { backgroundColor: '#5637DD' }
 };
+
 
 // createStackNavigator() is a function that provides a way for your app to transition between screens where each new screen is placed on top of a stack.
 // DirectoryNavigator function component created to return our stack navigator code for our direcotry and campsiteinfo screens.
@@ -171,9 +178,22 @@ const CustomDrawerContent = (props) => (
 // Set drawerIcon: property equal to a function with a color value we can destructure inside the parameter list. (Useful for setting the active & inactive color state of the icon we're adding.)
 // iconStyle = width: 24 - the outer curly brackets create the `drawerIcon` object, and the inner curly brackets create the `iconStyle` object within the `drawerIcon` object.
 // drawerContent=CustomDrawerContent - This tell the Drawer Navigator to use the component we're passing in to render the drawer.
-
+// useDispatch - useDispatch() is a hook provided by the `react-redux` library that gives access to the `dispatch` function of the Redux store. The `dispatch` function is used to update the state of the Redux store by dispatching actions. An action is a plain JavaScript object that describes the type of update and may include additional data. The reducer function then uses the action object to calculate the new state of the store.
+// useEffect - The `useEffect` function is a hook provided by React that allows function components to perform side effects, such as modifying the DOM or fetching data, and update the component state based on changes to props or state. The `useEffect` hook takes two parameters: a function to perform the side effect and an array of dependencies that trigger the effect when changed. The effect function is called after the initial render and after each update, unless the dependencies have not changed since the last render.
+// useEffect - hook into to dispatch our Thunk action creators. Any changes to the dispatch array will trigger the useEffect function to run the the state will be rerendered.  Other wise useEffect will only run when it's first rendered., thus state will only be changed then.
+// fetchCampsite() is a thunk action creator.  action creators are functions that when called return an action. This was created in campsiteSlice.js.
+// When our app loads, the Main component will get mounted and the useEffect hook will get called and all of data will be fetched and loaded into the Redux store, making it available for all our components to access and make changes to if needed.
 
 const Main = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      dispatch(fetchCampsites());
+      dispatch(fetchPromotions());
+      dispatch(fetchPartners());
+      dispatch(fetchComments());
+    }, [dispatch]);
+
     return (
         <View
             style={{

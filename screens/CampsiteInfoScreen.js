@@ -1,7 +1,7 @@
 import RenderCampsite from '../features/campsites/RenderCampsite';
 import { useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { COMMENTS } from '../shared/comments';
+import { useSelector } from 'react-redux';
 
 // Navigation and route props are available via react.  route will be used to ge the navigation params passed to the navigation function back in the directory screen.
 // route: destructuring the route prop in the parameter list of the CampsiteInfoScreen function.
@@ -23,7 +23,8 @@ import { COMMENTS } from '../shared/comments';
 
 const CampsiteInfoScreen = ({ route }) => {
     const { campsite } = route.params;
-    const [comments, setComments] = useState(COMMENTS);
+    const comments = useSelector((state) => state.comments);
+
     const [favorite, setFavorite] = useState(false);
 
     const renderCommentItem = ({ item }) => {
@@ -38,7 +39,7 @@ const CampsiteInfoScreen = ({ route }) => {
 
     return (
         <FlatList
-            data={comments.filter(
+            data={comments.commentsArray.filter(
                 (comment) => comment.campsiteId === campsite.id
             )}
             renderItem={renderCommentItem}

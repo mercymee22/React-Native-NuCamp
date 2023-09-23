@@ -1,7 +1,7 @@
 import RenderCampsite from '../features/campsites/RenderCampsite';
-import { useState } from 'react';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleFavorite } from '../features/favorites/favoritesSlice';
 
 // Navigation and route props are available via react.  route will be used to ge the navigation params passed to the navigation function back in the directory screen.
 // route: destructuring the route prop in the parameter list of the CampsiteInfoScreen function.
@@ -19,13 +19,17 @@ import { useSelector } from 'react-redux';
 // marginHorizontal: add space to sided, padding Vertical: space on top & bottom.
 // ListHeaderComponent: shows content above the flatlist, can also use the other built in component, ListFooterComponent. ListHeader receives a single argument (campsite).
 // RenderCampsite: displays campsite prop in a title above, both the title and text are wrapped in a fragment so we're only passing in a single parent component. 
-// Temporary - useState(false) - state variable used to track if the campsite is marked as a favorite.
+// favorites = useSelector - access our favorites data from redux store via useSelector hook.
+// state.favorites - const favorites = a call to useSelector which takes a selector function as an argument.  The selector function has the entire redux state as it's parameter and returns a specific slice of the state like state.comments.
+// dispatch = useDispatch - need a reference to our dispatch function from redux set equal to constant dispatch. From useDispatch hook we imported from React/Redux.
+// isFavorite=favorites.includes - checking if the favorites array contains this campsites id. resolves to true or false, the result is passed to isFavorite. Since we're not changing the data type being passed to isFavorite we don't need to update the RenderCampsite component.
+// markFavorite - clicking on the heart icon cause markFavorite to be called.  dispatches our toggleFavorite action and passes in campsite.id as the action payload.
 
 const CampsiteInfoScreen = ({ route }) => {
     const { campsite } = route.params;
     const comments = useSelector((state) => state.comments);
-
-    const [favorite, setFavorite] = useState(false);
+    const favorites = useSelector((state) => state.favorites)
+    const dispatch = useDispatch();
 
     const renderCommentItem = ({ item }) => {
         return (
@@ -49,8 +53,8 @@ const CampsiteInfoScreen = ({ route }) => {
                 <>
                     <RenderCampsite 
                         campsite={campsite} 
-                        isFavorite={favorite}
-                        markFavorite={() => setFavorite(true)}
+                        isFavorite={favorites.includes(campsite.id)}
+                        markFavorite={() => dispatch(toggleFavorite(campsite.id))}
                     />
                     <Text style={styles.commentsTitle}>Comments</Text>
                 </>

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { View, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Avatar, ListItem } from 'react-native-elements';
 import Loading from '../components/LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
@@ -27,7 +27,9 @@ import { toggleFavorite } from '../features/favorites/favoritesSlice'
 // SwipeRow - let us make the ListItem component swipeable. It expects 2 view components. 1st view - hidden view (after you swipe), 2nd view - default view before you swipe.
 // rightOpenValue - SwipeRow will open on the right side.  Requires a negative integer who value represents the amount of pixels the user will have to swipe for the row to open (from right to left). so the ListItem goes into the second view.
 // TouchableOpacity - our hidden delete options
-// onPress - when the onPress eventListener prop is pressed, then the dispatch function passes a call to toggleFavorite action creator, passing in campsite.id as the payload.
+// onPress - when the onPress eventListener prop is pressed, Alert Box with 3 parameters appears: Header, body, set of actions the dialog box needs to support, provided as an array of obects. Each object in the array will represent a button. (style:cancel will affect button color.)
+// onPress: dispatch - deletes the item via the dispatch function to update the store. id of campsite to delete.
+// cancelable: false - can't press outside of dialog box to make the box go away, have to press 1 of the buttons.
 
 const FavoritesScreen = ({ navigation }) => {
     const { campsitesArray, isLoading, errMess } = useSelector(
@@ -42,7 +44,21 @@ const FavoritesScreen = ({ navigation }) => {
                 <View style={styles.deleteView}>
                     <TouchableOpacity
                         style={styles.deleteTouchable}
-                        onPress={() => dispatch(toggleFavorite(campsite.id))}
+                        onPress={() => Alert.alert('Delete Favorite?',
+                            'Are you sure you wish to delete the favorite campsite ' + campsite.name + '?',
+                            [
+                                {
+                                    text: 'Cancel',
+                                    onPress: () => console.log(campsite.name + 'Not Deleted'),
+                                    style: 'cancel'
+                                },
+                                {
+                                    text: 'OK',
+                                    onPress: () => dispatch(toggleFavorite(campsite.id))
+                                }
+                            ],
+                            { cancelable: false }
+                        )}
                     >
                         <Text style={styles.deleteText}>Delete</Text>
                     </TouchableOpacity>

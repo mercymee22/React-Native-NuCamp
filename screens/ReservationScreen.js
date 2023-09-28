@@ -1,7 +1,16 @@
 import { useState } from 'react';
-import { Text, View, ScrollView, StyleSheet, Switch, Button } from 'react-native';
-import { Picker } from '@react-native-picker/picker'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import {
+    Text,
+    View,
+    ScrollView,
+    StyleSheet,
+    Switch,
+    Button,
+    Modal
+} from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 // useState local state variables used for tracking the values in our campsiteReservaton Form. 1 state variable for each input + 1 more for displaying the datetime picker component.
 // hikeIn - switch component input, date - date time picker component
@@ -27,25 +36,30 @@ const ReservationScreen = () => {
     const [hikeIn, setHikeIn] = useState(false);
     const [date, setDate] = useState(new Date());
     const [showCalendar, setShowCalendar] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
-    const onDateChange = (event, selectedDate) => { 
+    const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShowCalendar(Platform.OS === 'ios');
         setDate(currentDate);
-    };  
+    };
 
     const handleReservation = () => {
         console.log('campers:', campers);
         console.log('hikeIn:', hikeIn);
         console.log('date:', date);
+        setShowModal(!showModal);
+    };
+
+    const resetForm = () => {
         setCampers(1);
         setHikeIn(false);
         setDate(new Date());
         setShowCalendar(false);
-    }
+    };
 
     return (
-        <scrollView>
+        <ScrollView>
             <View style={styles.formRow}>
                 <Text style={styles.formLabel}>Number of Campers:</Text>
                 <Picker
@@ -71,7 +85,7 @@ const ReservationScreen = () => {
                 />
             </View>
             <View style={styles.formRow}>
-                <Text style={styles.forLabel}>Date:</Text>
+                <Text style={styles.formLabel}>Date:</Text>
                 <Button
                     onPress={() => setShowCalendar(!showCalendar)}
                     title={date.toLocaleDateString('en-US')}
@@ -79,18 +93,16 @@ const ReservationScreen = () => {
                     accessibilityLabel='Tap me to select a reservation date'
                 />
             </View>
-            <View>
-                {showCalendar && (
-                    <DateTimePicker
-                        style={styles.formItem}
-                        value={date}
-                        mode='date'
-                        display='default'
-                        onChange={onDateChange}
-                    />
-                )}
-            </View>
-            <View style>
+            {showCalendar && (
+                <DateTimePicker
+                    style={styles.formItem}
+                    value={date}
+                    mode='date'
+                    display='default'
+                    onChange={onDateChange}
+                />
+            )}
+            <View style={styles.formRow}>
                 <Button
                     onPress={() => handleReservation()}
                     title='Search Availability'
@@ -98,9 +110,38 @@ const ReservationScreen = () => {
                     accessibilityLabel='Tap me to search for available campsites to reserve'
                 />
             </View>
-        </scrollView>
-    )
-}
+            <Modal
+                animationType='slide'
+                transparent={false}
+                visible={showModal}
+                onRequestClose={() => setShowModal(!showModal)}
+            >
+                <View style={styles.modal}>
+                    <Text style={styles.modalTitle}>
+                        Search Campsite Reservations
+                    </Text>
+                    <Text style={styles.modalText}>
+                        Number of Campers: {campers}
+                    </Text>
+                    <Text style={styles.modalText}>
+                        Hike-In?: {hikeIn ? 'Yes' : 'No'}
+                    </Text>
+                    <Text style={styles.modalText}>
+                        Date: {date.toLocaleDateString('en-US')}
+                    </Text>
+                    <Button
+                        onPress={() => {
+                            setShowModal(!showModal);
+                            resetForm();
+                        }}
+                        color='#5637DD'
+                        title='Close'
+                    />
+                </View>
+            </Modal>
+        </ScrollView>
+    );
+};
 
 const styles = StyleSheet.create({
     formRow: {
@@ -116,6 +157,22 @@ const styles = StyleSheet.create({
     },
     formItem: {
         flex: 1
+    },
+    modal: {
+        justifyContent: 'center',
+        margin: 20
+    },
+    modalTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        backgroundColor: '#5637DD',
+        textAlign: 'center',
+        color: '#fff',
+        marginBottom: 20
+    },
+    modalText: {
+        fontSize: 18,
+        margin: 10
     }
 });
 

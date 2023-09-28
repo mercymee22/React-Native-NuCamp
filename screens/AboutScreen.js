@@ -27,7 +27,7 @@ const Mission = () => {
 const AboutScreen = () => {
     const partners = useSelector((state) => state.partners);
 
-    // partners.isLoading - check the values of isLoading and errMess properties of our partners object from Redux. Depending on what they contain, return different JSX from out AboutScreen component.
+// partners.isLoading - check the values of isLoading and errMess properties of our partners object from Redux. Depending on what they contain, return different JSX from out AboutScreen component.
 
     if (partners.isLoading) {
         return (

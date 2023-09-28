@@ -16,6 +16,7 @@ import { fetchPartners } from '../features/partners/partnersSlice';
 import { fetchCampsites } from '../features/campsites/campsitesSlice';
 import { fetchPromotions } from '../features/promotions/promotionsSlice';
 import { fetchComments } from '../features/comments/commentsSlice';
+import FavoritesScreen from './FavoritesScreen';
 
 
 // HomeNavigator is where directory navigator is defined.
@@ -170,6 +171,29 @@ const ReservationNavigator = () => {
     );
 };
 
+const FavoritesNavigator = () => {
+    const Stack = createStackNavigator();
+    return (
+        <Stack.Navigator screenOptions={screenOptions}>
+            <Stack.Screen
+                name='Favorites'
+                component={FavoritesScreen}
+                options={({ navigation }) => ({
+                    title: 'Favorite Campsites',
+                    headerLeft: () => (
+                        <Icon
+                            name='heart'
+                            type='font-awesome'
+                            iconStyle={styles.stackIcon}
+                            onPress={() => navigation.toggleDrawer()}
+                        />
+                    )
+                })}
+            />
+        </Stack.Navigator>
+    );
+};
+
 // props are read only data being passed from a parent component in this case Drawer.Navigator in the main component. The Drawer.Navigator is a built-in component. It manages the state for the drawer, including opening and closing, and passes these and other props down to CustomDrawerContent via the `drawerContent` prop. These props may include navigation (like goBack, navigate etc.), state, descriptors (which provides access to various properties and methods related to the screens defined in the navigator), and others. 
 // DrawerContentScrollView - displays content in the side drawer into a scrollable container, see comment above too.
 // spread operator passes along all the props coming into CustomDrawercontent component to the DrawercontentScrollView.
@@ -273,6 +297,23 @@ const Main = () => {
                         drawerIcon: ({ color }) => (
                             <Icon
                                 name='tree'
+                                type='font-awesome'
+                                size={24}
+                                iconStyle={{ width: 24 }}
+                                color={color}
+                            />
+                        )
+                    }}
+
+                />
+                 <Drawer.Screen
+                    name='Favorites'
+                    component={FavoritesNavigator}
+                    options={{
+                        title: 'My Favorites',
+                        drawerIcon: ({ color }) => (
+                            <Icon
+                                name='heart'
                                 type='font-awesome'
                                 size={24}
                                 iconStyle={{ width: 24 }}

@@ -6,9 +6,8 @@ import {
     View,
     Button,
     Modal,
-    Rating,
-    Input
 } from 'react-native';
+import { Input, Rating } from 'react-native-elements'
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleFavorite } from '../features/favorites/favoritesSlice';
 import { useState } from 'react';

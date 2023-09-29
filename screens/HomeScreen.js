@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
-import { ScrollView, Text, View } from 'react-native';
+import { Animated, Text, View } from 'react-native';
 import { Card } from 'react-native-elements';
 import Loading from '../components/LoadingComponent';
+import { useEffect, useRef } from 'react';
 
 // Since our data is now in the Redux store, see Main component - useEffect, we no longer need to import the CAMPSITES, PROMOTIONS, AND PARTNERS arrays. Ans we're not using local state so we get rid of useState.
 // FeaturedItem - renders each featured object
@@ -47,7 +48,7 @@ const FeaturedItem = (props) => {
     return <View />;
 };
 
-// ScrollView - Used to render a group or list of items. Difference between ScrollView & FlatList, ScrollView loads all it's child components at once but flatList uses lazy loading (only render parts at a time).
+// ScrollView (replaced w/Animated) - Used to render a group or list of items. Difference between ScrollView & FlatList, ScrollView loads all it's child components at once but flatList uses lazy loading (only render parts at a time).
 // const featCampsite - using the array find method to find the first item where featured is set to true.
 // Got rid of variable that hold local state and replaced them with variables that hold the data from the Redux store for campsites, promotions, partners
 // state - special function called a selector that receives our Redux state.  We just want the campsites portion of the state so we return state.campsites.  We know state.campsites is available in the state because we defined it in the store.js file when we created configured store and defined our slice reducer with the name campsites.
@@ -59,13 +60,24 @@ const FeaturedItem = (props) => {
     const campsites = useSelector((state) => state.campsites);
     const promotions = useSelector((state) => state.promotions);
     const partners = useSelector((state) => state.partners);
+    
+    const scaleValue = useRef (new Animated.Value(0)).current;
+    scaleAnimation = Animated.timing(scaleValue, {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true
+    });
 
     const featCampsite = campsites.campsitesArray.find((item) => item.featured);
     const featPromotion = promotions.promotionsArray.find((item) => item.featured);
     const featPartner = partners.partnersArray.find((item) => item.featured);
 
+    useEffect(() => {
+        scaleAnimation.start();
+    }, []);
+
     return (
-        <ScrollView>
+        <Animated.ScrollView style={{ transform: [{ scale: scaleValue }] }}>
             <FeaturedItem 
                 item={featCampsite}
                 isLoading={campsites.isLoading}
@@ -81,7 +93,7 @@ const FeaturedItem = (props) => {
                 isLoading={partners.isLoading}
                 errMess={partners.errMess} 
             />
-        </ScrollView>
+        </Animated.ScrollView>
     );
 };
 

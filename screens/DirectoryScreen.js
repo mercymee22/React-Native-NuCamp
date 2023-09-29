@@ -3,6 +3,7 @@ import { Tile } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import Loading from '../components/LoadingComponent';
+import * as Animatable from 'react-native-animatable'
 
 // The renderDirectoryItem function we passed to the FlatLists renderItem prop will get passed an object with specific fields when it's called by FlatList. One of the fields is "item", which contains the current item in the array we want to render. When function gets called with an object, we can grab certain fields from the object using destructuring (in the parameter list). We're destructuring item and renaming it to campsite since our items we're rendering are campsite data.
 // render a ListItem, similar to the html listitem element.  Using it to render each campsite from the FlatList. Other components inside ListItem configure how ListItem renders.
@@ -31,15 +32,17 @@ const DirectoryScreen = ({ navigation }) => {
 
     const renderDirectoryItem = ({ item: campsite }) => {
         return (
-            <Tile
-                title={campsite.name}
-                caption={campsite.description}
-                featured
-                onPress={() =>
-                    navigation.navigate('CampsiteInfo', { campsite })
-                }
-                imageSrc={{ uri: baseUrl + campsite.image }}
-            />
+            <Animatable.View animation='fadeInRightBig' duration={2000}>
+                <Tile
+                    title={campsite.name}
+                    caption={campsite.description}
+                    featured
+                    onPress={() =>
+                        navigation.navigate('CampsiteInfo', { campsite })
+                    }
+                    imageSrc={{ uri: baseUrl + campsite.image }}
+                />
+            </Animatable.View>
         );
     };
     return (

@@ -4,7 +4,8 @@ import { Avatar, ListItem } from 'react-native-elements';
 import Loading from '../components/LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 import { SwipeRow } from 'react-native-swipe-list-view';
-import { toggleFavorite } from '../features/favorites/favoritesSlice'
+import { toggleFavorite } from '../features/favorites/favoritesSlice';
+import * as Animatable from 'react-native-animatable';
 
 // navigation - destructuring the navigation prop. This navigation prop is given to this component by react navigation when we add it as a screen in the stack navigator.
 // useSelector hook - getting state data from redux store. deconstruct those 3 from the return value of useSelector, returning the state.campsites portion of our state.
@@ -99,13 +100,15 @@ const FavoritesScreen = ({ navigation }) => {
         );
     }
     return (
-        <FlatList
-            data={campsitesArray.filter((campsite) =>
-                favorites.includes(campsite.id)
-            )}
-            renderItem={renderFavoriteItem}
-            keyExtractor={(item) => item.id.toString()}
-        />
+        <Animatable.View animation='fadeInRightBig' duration={2000}>
+            <FlatList
+                data={campsitesArray.filter((campsite) =>
+                    favorites.includes(campsite.id)
+                )}
+                renderItem={renderFavoriteItem}
+                keyExtractor={(item) => item.id.toString()}
+            />
+        </Animatable.View>
     );
 };
 

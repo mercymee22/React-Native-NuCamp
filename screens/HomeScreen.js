@@ -10,6 +10,8 @@ import { useEffect, useRef } from 'react';
 // were using using the item prop and destructuring it but we changed it to have access to the whole props object, so we can have access to the new props we're passing in. Then below that we destructure the item prop.
 // View style - horizontally aligns text over the image
 // Card.Image source= - now we're receiving a location reference to where our item is within the json server.  uri - congiguration object = to the loaton of the image to render.  baseUrl - where our json server is running.  item.image - string with the rest of the path to our image.
+// React Animations: https://reactnative.dev/docs/animations
+
 
 const FeaturedItem = (props) => {
     const { item } = props;
@@ -55,14 +57,21 @@ const FeaturedItem = (props) => {
 // featCampsite-campsites.campsitesArray - the data is found in campsitesSlice.js, it is the campsites state object with the campsitesArray being one of the propertyies in it..
 // Passing the props we created 
 // isLoading=campsites.isLoading - passed in from the isLoading props created in the featuredItem component above.
-
- const HomeScreen = () => {
+// scaleValue - this is the recommended way to create animation values according to the React docs. This creates our animation value that we can apply to an animatable component.
+// useRef - pass useRef new Animated.value with 0 as an argument, and access the current property of the ref object.
+// useRef - returns a mutable ref object. This ref object has a current property that contains the value of whatever we pass to useRef as an argument and guarantees the same object will be available for each component rendered and not recreated. 
+// scaleAnimation - hold our animation data. 2 arguments: 1 - name of animated value we want to have change over time. 2 - object containing 3 properties.
+// toValue - what we want the animated.value to change to.  duration - how long it will take to animate from 0 - 1 (1.5 seconds).  useNativeDriver - helps improve performance of animations in this library.
+// scaleAnimation.start - to run the animation once, call the start method on our scaleAnimation variable inside a useEffect hook.
+// The useEffect hook gets arguments, a function and a dependency array which looks for values that have changed, to tell the function to fire. empty dependency array will cause the animation to start when it first mounts.
+// tranform style, the type of transform we want is scale, and the value for scale is scaleValue, which is a dynamic value that will change  when the animation is running from 0 - 1. Tranform can be used to create many animations.
+ 
+const HomeScreen = () => {
     const campsites = useSelector((state) => state.campsites);
     const promotions = useSelector((state) => state.promotions);
-    const partners = useSelector((state) => state.partners);
-    
-    const scaleValue = useRef (new Animated.Value(0)).current;
-    scaleAnimation = Animated.timing(scaleValue, {
+    const partners = useSelector((state) => state.partners);  
+    const scaleValue = useRef (new Animated.Value(0)).current; 
+    const scaleAnimation = Animated.timing(scaleValue, {
         toValue: 1,
         duration: 1500,
         useNativeDriver: true

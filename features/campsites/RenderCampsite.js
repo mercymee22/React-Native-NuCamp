@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, PanResponder, Alert } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { baseUrl } from '../../shared/baseUrl';
-import * as Animatable from 'react-native-animatable'
+import * as Animatable from 'react-native-animatable';
+import { useRef } from 'react';
 
 // Card - returns a card component
 // Double Curly Braces for style=margin:20 mean; Outer cruly braces denote javascript being used in JSX, inner curly braces deonte a JS object.
@@ -18,12 +19,22 @@ import * as Animatable from 'react-native-animatable'
 // isLeftSwipe - pass the gestureState value to it and return a true value if gesture is > 200 pixels to the left.
 // 3rd argument of the alert passes an array which holds objects to configure the alert buttons.
 // :props.markFavorite - if it's not a favorite, call the markFavorite event handler.
+// useRef - in order to trigger an animation we'll need to set up a reference to it. (Like giving an html element an id code so you can refer to it later with something like getElementById.)
+// create a ref and store it in view. point it to an animatable component (ref=view).
+// onPanResponderGrant - pan handler that's triggered when gesture is first recognized and onStartShouldSetPanResponder returns true thus granting this view to respond to touch events.
+// rubberBand animation (method) with a duration of 1 second. Every animatable method like rubberBand returns a promise. This promise will resolve to an object at the end of the animation and will contain the property of finished which returns true or false.
 
 const RenderCampsite = (props) => {
     const { campsite } = props;
+    const view = useRef();
     const isLeftSwipe = ({ dx }) => dx < -200;
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
+        onPanResponderGrant: () => {
+            view.current
+                .rubberBand(1000)
+                .then((endState) => console.log(endState.finished ? 'finished' : 'canceled'))
+        },
         onPanResponderEnd: (e, gestureState) => {
             console.log(gestureState);
             if (isLeftSwipe(gestureState)) {
@@ -58,6 +69,7 @@ const RenderCampsite = (props) => {
                 duration={2000}
                 delay={1000}
                 {...panResponder.panHandlers}
+                ref={view}
             >
                 <Card containerStyle={styles.cardContainer}>
                     <Card.Image source={{ uri: baseUrl + campsite.image }}>

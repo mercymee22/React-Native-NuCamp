@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, PanResponder, Alert } from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { baseUrl } from '../../shared/baseUrl';
 import * as Animatable from 'react-native-animatable'
@@ -10,15 +10,54 @@ import * as Animatable from 'react-native-animatable'
 // (props) - passing in the entire props object in as the parameter so we can have access to all the props we pass in, not just the campsite prop like before.
 // campsite prop under RenderCampsite is destructuring the campsite object and comes from MainComponent.js where campsite is the variable declared by useState with the initial value of the CAMPSITES array.
 // onPress= - calling the markFavoriteEventHandler we're receiving through props to tell the campsiteinfo screen, a heart icon has been clicked on, which will call the function we set = to the markFavorite prop when we passed it in from the campsiteinfo screen.
+// dx - destructures the dx property from an object, dx is the distance of a gesture accross the x-axis.
+// dx < -200 - we'll recognize a gesture that has a horizontal drag to the left that's smaller than -200 pixels. (-100 is bigger than -300)
+// PanResponder has a number of predefined event handlers that can be used with it (methods).
+// onStartShouldSetPanResponder - activates the PanResponder to respond to gestures on the component it's used on.
+// onPanResponderEnd: e, gestures - these values are automatically passed into the event handler. e - event (native event object), gestureState - object that holds important info about the gestureState that just ended.
+// isLeftSwipe - pass the gestureState value to it and return a true value if gesture is > 200 pixels to the left.
+// 3rd argument of the alert passes an array which holds objects to configure the alert buttons.
+// :props.markFavorite - if it's not a favorite, call the markFavorite event handler.
 
 const RenderCampsite = (props) => {
     const { campsite } = props;
+    const isLeftSwipe = ({ dx }) => dx < -200;
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderEnd: (e, gestureState) => {
+            console.log(gestureState);
+            if (isLeftSwipe(gestureState)) {
+                Alert.alert(
+                    'Add Favorite',
+                    'Are you sure you wish to add ' +
+                    campsite.name + ' to favorites?',
+                    [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                            onPress: () => console.log('Cancel Pressed')
+                        },
+                        {
+                            text: 'OK',
+                            onPress: () =>
+                                props.isFavorite
+                                    ? console.log('Already set as a favorite')
+                                    : props.markFavorite()
+                        }
+                    ],
+                    { cancelable: false }
+                );
+            }
+        }
+    });
+
     if (campsite) {
         return (
             <Animatable.View
                 animation='fadeInDownBig'
                 duration={2000}
                 delay={1000}
+                {...panResponder.panHandlers}
             >
                 <Card containerStyle={styles.cardContainer}>
                     <Card.Image source={{ uri: baseUrl + campsite.image }}>

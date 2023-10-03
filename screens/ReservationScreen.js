@@ -33,6 +33,16 @@ import { Animated } from 'react-native';
 // logical && operator - if left side operand is false, right side is not evaluated at all.
 // onDateChange details are listed in the react native documentation for the calendar, this is set up like the docs say.
 
+// reservationDate - the requested Reservation Date. (Async functions always return a promise.)  We don't want to send our notification right away because we have to request permissions, so we'll put our notification sending code inside another function to call when we're ready.
+// Notifications.setNotificationHander - (provided by notifications API) overrides the default behavior of the notification not showing an alert so now it does.
+// How to use and set up notifcations is found in the documentaiton: https://docs.expo.dev/versions/latest/sdk/notifications/
+// const presentLocalNotification to shouldSetBadge - makes sure the app will show the notification alert.
+// pass scheduleNotificationsAsync the contents object which holds the title and body of the reservation, body using an js template literal syntax.
+// reservationDate - this was passed into the presentLocalNotification function also.
+// trigger (property): null (value) - setting trigger to null causes the notifcation to fire immediately. The trigger property can also be used to schedule the notification.
+// await Notifications.getPermissionsAsync - Checks to see if we have permissions from the device to send notifications and to request permissions if we don't have them. 
+// Await is a javascript ES8 keyword that can only be used in async functions.  Use it followed by a promise from the notifications API.
+
 const ReservationScreen = () => {
     const [campers, setCampers] = useState(1);
     const [hikeIn, setHikeIn] = useState(false);
@@ -78,6 +88,34 @@ const ReservationScreen = () => {
         setHikeIn(false);
         setDate(new Date());
         setShowCalendar(false);
+    };
+
+    const presentLocalNotification = async (reservationDate) => {
+        const sendNotification = () => {
+            Notifications.setNotificationHandler({
+                handleNotification: async () => ({
+                    shouldShowAlert: true,
+                    shouldPlaySound: true,
+                    shouldSetBadge: true
+                })
+            });
+
+            Notifications.scheduleNotificationAsync({
+                content: {
+                    title: 'Your Campsite Reservation Search',
+                    body: `Search for ${reservationDate} requested`
+                },
+                trigger: null
+            });
+        };
+
+        let permissions = await Notifications.getPermissionsAsync();
+        if (!permissions.granted) {
+            permissions = await Notifications.requestPermissionsAsync();
+        }
+        if (permissions.granted) {
+            sendNotification();
+        }
     };
 
     return (

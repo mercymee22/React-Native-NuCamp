@@ -4,9 +4,9 @@ import { CheckBox, Input } from 'react-native-elements';
 import * as SecureStore from 'expo-secure-store';
 
 const LoginScreen = () => {
-    const [ username, setUsername ] = useState('');
-    const [ password, setPassword ] = useState('');
-    const [ remember, setRemember ] = setRemember(false);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [remember, setRemember] = useState(false);
 
     const handleLogin = () => {
         console.log('username:', username);
@@ -20,10 +20,13 @@ const LoginScreen = () => {
                     password
                 })
             ).catch((error) => console.log('Could not save user info', error));
-            } else {
-                SecureStore.deleteItemAsync('userinfo').catch((error) => console.log('Could not delete user info', error))
-            }
+        } else {
+            SecureStore.deleteItemAsync('userinfo').catch((error) =>
+                console.log('Could not delete user info', error)
+            );
+        }
     };
+
     useEffect(() => {
         SecureStore.getItemAsync('userinfo').then((userdata) => {
             const userinfo = JSON.parse(userdata);
@@ -37,7 +40,7 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Input 
+            <Input
                 placeholder='Username'
                 leftIcon={{ type: 'font-awesome', name: 'user-o' }}
                 onChangeText={(text) => setUsername(text)}
@@ -61,7 +64,7 @@ const LoginScreen = () => {
                 containerStyle={styles.formCheckbox}
             />
             <View style={styles.formButton}>
-                <Button 
+                <Button
                     onPress={() => handleLogin()}
                     title='Login'
                     color='#5637DD'
@@ -69,9 +72,9 @@ const LoginScreen = () => {
             </View>
         </View>
     );
-}
+};
 
-const styles = styleSheet.create({
+const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         margin: 20

@@ -274,7 +274,7 @@ const Main = () => {
                 drawerContent={CustomDrawerContent}
                 drawerStyle={{ backgroundColor: '#CEC8FF' }}
             >
-                 <Drawer.Screen
+                <Drawer.Screen
                     name='Login'
                     component={LoginNavigator}
                     options={{

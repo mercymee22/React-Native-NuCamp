@@ -12,7 +12,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Animated } from 'react-native';
-
+import * as Notifications from 'expo-notifications';
 
 // useState local state variables used for tracking the values in our campsiteReservaton Form. 1 state variable for each input + 1 more for displaying the datetime picker component.
 // hikeIn - switch component input, date - date time picker component
@@ -42,6 +42,13 @@ import { Animated } from 'react-native';
 // trigger (property): null (value) - setting trigger to null causes the notifcation to fire immediately. The trigger property can also be used to schedule the notification.
 // await Notifications.getPermissionsAsync - Checks to see if we have permissions from the device to send notifications and to request permissions if we don't have them. 
 // Await is a javascript ES8 keyword that can only be used in async functions.  Use it followed by a promise from the notifications API.
+// using await keyword will cause this function to stop and wait for this promise to be fulfilled (can only be used in an async function) Once it does it will assing the promises result to the permissions variable.
+// !permissions.granted - permissions were not able to be granted. May not mean permissions denied, means we don't have them yet
+// request permissions, await the result of the promise returned from notifications.requestPermissionsAsync();
+// if permisssions granted then we either had permissions or were able to request and get permissions. Now we can call sendNotifications method (since we have permissions)
+// onPress - call presentLocalNotfication and rest the form.  Pass in the date, taken from the reservationScreen state variable, date. Format using toLocaleDateString.
+
+
 
 const ReservationScreen = () => {
     const [campers, setCampers] = useState(1);
@@ -56,31 +63,36 @@ const ReservationScreen = () => {
     };
 
     const handleReservation = () => {
-        const message = 
-        `Number of Campers:  ${campers},
-        \nHike-In?  ${hikeIn},
-        \nDate:  ${date.toLocaleDateString('en-US')},
-        `
+        const message = `Number of Campers: ${campers}
+                            \nHike-In? ${hikeIn}
+                            \nDate: ${date.toLocaleDateString('en-US')}`;
         Alert.alert(
             'Begin Search?',
             message,
             [
                 {
-                    text: 'CANCEL',
-                    onPress: () => resetForm(),
+                    text: 'Cancel',
+                    onPress: () => {
+                        console.log('Reservation Search Canceled');
+                        resetForm();
+                    },
                     style: 'cancel'
                 },
                 {
                     text: 'OK',
-                    onPress: () => resetForm()
+                    onPress: () => {
+                        presentLocalNotification(
+                            date.toLocaleDateString('en-US')
+                        );
+                        resetForm();
+                    }
                 }
             ],
             { cancelable: false }
-        )
+        );
         console.log('campers:', campers);
         console.log('hikeIn:', hikeIn);
         console.log('date:', date);
-        setShowModal(!showModal);
     };
 
     const resetForm = () => {
@@ -120,11 +132,7 @@ const ReservationScreen = () => {
 
     return (
         <ScrollView>
-            <Animated.View
-                animation='zoomIn'
-                duration={2000}
-                delay={1000}
-            >
+            <Animatable.View animation='zoomIn' duration={2000} delay={1000}>
                 <View style={styles.formRow}>
                     <Text style={styles.formLabel}>Number of Campers:</Text>
                     <Picker
@@ -175,7 +183,7 @@ const ReservationScreen = () => {
                         accessibilityLabel='Tap me to search for available campsites to reserve'
                     />
                 </View>
-            </Animated.View>
+            </Animatable.View>
         </ScrollView>
     );
 };

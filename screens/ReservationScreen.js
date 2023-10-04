@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Animated } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import * as Notifications from 'expo-notifications';
 
 // useState local state variables used for tracking the values in our campsiteReservaton Form. 1 state variable for each input + 1 more for displaying the datetime picker component.
@@ -46,7 +46,7 @@ import * as Notifications from 'expo-notifications';
 // !permissions.granted - permissions were not able to be granted. May not mean permissions denied, means we don't have them yet
 // request permissions, await the result of the promise returned from notifications.requestPermissionsAsync();
 // if permisssions granted then we either had permissions or were able to request and get permissions. Now we can call sendNotifications method (since we have permissions)
-// onPress - call presentLocalNotfication and rest the form.  Pass in the date, taken from the reservationScreen state variable, date. Format using toLocaleDateString.
+// onPress - call presentLocalNotfication and rest the form.  Pass in the date, taken from the reservationScreen state variable, date. Format using toLocaleDateString. 
 
 
 

@@ -275,21 +275,6 @@ const Main = () => {
                 drawerStyle={{ backgroundColor: '#CEC8FF' }}
             >
                 <Drawer.Screen
-                    name='Login'
-                    component={LoginNavigator}
-                    options={{
-                        drawerIcon: ({ color }) => (
-                            <Icon
-                                name='sign-in'
-                                type='font-awesome'
-                                size={24}
-                                iconStyle={{ width: 24 }}
-                                color={color}
-                            />
-                        )
-                    }}
-                />
-                <Drawer.Screen
                     name='Home'
                     component={HomeNavigator}
                     options={{
@@ -377,6 +362,21 @@ const Main = () => {
                         drawerIcon: ({ color }) => (
                             <Icon
                                 name='address-card'
+                                type='font-awesome'
+                                size={24}
+                                iconStyle={{ width: 24 }}
+                                color={color}
+                            />
+                        )
+                    }}
+                />
+                 <Drawer.Screen
+                    name='Login'
+                    component={LoginNavigator}
+                    options={{
+                        drawerIcon: ({ color }) => (
+                            <Icon
+                                name='sign-in'
                                 type='font-awesome'
                                 size={24}
                                 iconStyle={{ width: 24 }}

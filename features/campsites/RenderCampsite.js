@@ -1,8 +1,15 @@
-import { StyleSheet, Text, View, PanResponder, Alert } from 'react-native';
+import { useRef } from 'react';
+import {
+    StyleSheet,
+    Text,
+    View,
+    PanResponder,
+    Alert,
+    Share
+} from 'react-native';
 import { Card, Icon } from 'react-native-elements';
 import { baseUrl } from '../../shared/baseUrl';
 import * as Animatable from 'react-native-animatable';
-import { useRef } from 'react';
 
 // Card - returns a card component
 // Double Curly Braces for style=margin:20 mean; Outer cruly braces denote javascript being used in JSX, inner curly braces deonte a JS object.
@@ -23,27 +30,36 @@ import { useRef } from 'react';
 // create a ref and store it in view. point it to an animatable component (ref=view).
 // onPanResponderGrant - pan handler that's triggered when gesture is first recognized and onStartShouldSetPanResponder returns true thus granting this view to respond to touch events.
 // rubberBand animation (method) with a duration of 1 second. Every animatable method like rubberBand returns a promise. This promise will resolve to an object at the end of the animation and will contain the property of finished which returns true or false.
+// Share.share - Share API's share method takes up to 2 objects and arguments.
+// $title: - title, message, and url parameters this function is receiving
+// dialogTitle - for andriod only, sets a title for the dialog box that wwill show up.
+// shareCampsite - passing it 3 arguments, campsite.name = title, campsite.description = message, url for campsite image.
 
 const RenderCampsite = (props) => {
     const { campsite } = props;
+
     const view = useRef();
+
     const isLeftSwipe = ({ dx }) => dx < -200;
-    const isRightSwipe = ({ dx }) => dx < 200;
-    
+    const isRightSwipe = ({ dx }) => dx > 200;
+
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onPanResponderGrant: () => {
             view.current
                 .rubberBand(1000)
-                .then((endState) => console.log(endState.finished ? 'finished' : 'canceled'))
+                .then((endState) =>
+                    console.log(endState.finished ? 'finished' : 'canceled')
+                );
         },
         onPanResponderEnd: (e, gestureState) => {
-            console.log(gestureState);
+            console.log('pan responder end', gestureState);
             if (isLeftSwipe(gestureState)) {
                 Alert.alert(
                     'Add Favorite',
                     'Are you sure you wish to add ' +
-                    campsite.name + ' to favorites?',
+                        campsite.name +
+                        ' to favorites?',
                     [
                         {
                             text: 'Cancel',
@@ -63,8 +79,21 @@ const RenderCampsite = (props) => {
             } else if (isRightSwipe(gestureState)) {
                 props.onShowModal();
             }
-        },
+        }
     });
+
+    const shareCampsite = (title, message, url) => {
+        Share.share(
+            {
+                title,
+                message: `${title}: ${message} ${url}`,
+                url
+            },
+            {
+                dialogTitle: 'Share ' + title
+            }
+        );
+    };
 
     if (campsite) {
         return (
@@ -72,8 +101,8 @@ const RenderCampsite = (props) => {
                 animation='fadeInDownBig'
                 duration={2000}
                 delay={1000}
-                {...panResponder.panHandlers}
                 ref={view}
+                {...panResponder.panHandlers}
             >
                 <Card containerStyle={styles.cardContainer}>
                     <Card.Image source={{ uri: baseUrl + campsite.image }}>
@@ -102,6 +131,20 @@ const RenderCampsite = (props) => {
                             raised
                             reverse
                             onPress={props.onShowModal}
+                        />
+                        <Icon
+                            name='share'
+                            type='font-awesome'
+                            color='#5637DD'
+                            raised
+                            reverse
+                            onPress={() =>
+                                shareCampsite(
+                                    campsite.name,
+                                    campsite.description,
+                                    baseUrl + campsite.image
+                                )
+                            }
                         />
                     </View>
                 </Card>

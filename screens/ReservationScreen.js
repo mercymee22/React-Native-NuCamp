@@ -48,8 +48,6 @@ import * as Notifications from 'expo-notifications';
 // if permisssions granted then we either had permissions or were able to request and get permissions. Now we can call sendNotifications method (since we have permissions)
 // onPress - call presentLocalNotfication and rest the form.  Pass in the date, taken from the reservationScreen state variable, date. Format using toLocaleDateString. 
 
-
-
 const ReservationScreen = () => {
     const [campers, setCampers] = useState(1);
     const [hikeIn, setHikeIn] = useState(false);

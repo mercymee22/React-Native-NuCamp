@@ -256,6 +256,13 @@ const CustomDrawerContent = (props) => (
 // useEffect - hook into to dispatch our Thunk action creators. Any changes to the dispatch array will trigger the useEffect function to run the the state will be rerendered.  Other wise useEffect will only run when it's first rendered., thus state will only be changed then.
 // fetchCampsite() is a thunk action creator.  action creators are functions that when called return an action. This was created in campsiteSlice.js.
 // When our app loads, the Main component will get mounted and the useEffect hook will get called and all of data will be fetched and loaded into the Redux store, making it available for all our components to access and make changes to if needed.
+// NetInfo.fetch - (getting the network info when the component loads) returns a promise that results in a net info state object, fetch gets the info only once.
+// connectionInfo - this is what we named the state object returned from NetInfo. fetch documentation - https://github.com/react-native-netinfo/react-native-netinfo
+// connectionInfo - doesn't matter what we
+// ToastAndroid - a brief message that appears overlayed and then dissapears after a few seconds (.LONG - 3.5 seconds, .SHORT - 2 seconds) no toast code for ios so Alert used instead.
+// Reminder - if you return a function from the useEffect hook, react will call that function right before the component it was defined in gets unmounted.
+// handleConnectivityChange (function) - When there is a change in the connection state, our application pops up either a toast for Android or an alert for ios with a mes
+// none, unkown, cellular, wifi - options for the type property of NetInfoState, as described in the documentation.
 
 const Main = () => {
     const dispatch = useDispatch();
